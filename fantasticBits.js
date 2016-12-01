@@ -61,6 +61,7 @@ var myGoals = {
 var enemyGoal = oppositeGoals[myTeamId];
 var myGoal = myGoals[myTeamId];
 
+let mana = 0;
 // game loop
 while (true) {
     var entities = parseInt(readline()); // number of entities still in game
@@ -99,11 +100,14 @@ while (true) {
 
           // once we target a snaffle we remove it from the list
           var closestSnaffleIndex = snaffles.findIndex(snaffle => snaffle.x === closestSnaffle.x && snaffle.y === closestSnaffle.y);
-          snaffles.splice(closestSnaffleIndex, 1);
+          if (snaffles.length > 1) {
+            snaffles.splice(closestSnaffleIndex, 1);
+          }
           printErr('closestSnaffle.x : ' + closestSnaffle.x);
           printErr('closestSnaffle.y : ' + closestSnaffle.y);
           targetSnaffle(closestSnaffle);
         }
+        mana = mana + 1;
         // Write an action using print()
         // To debug: printErr('Debug messages...');
 
