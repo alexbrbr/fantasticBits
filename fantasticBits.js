@@ -15,17 +15,24 @@ function getDistanceBetween(A, B) {
   return Math.sqrt((B.x - A.x)*(B.x - A.x) + (B.y - A.y)*(B.y - A.y));
 }
 
-function getClosestSnaffle(wizard, snaffles) {
-  return snaffles.reduce((distance, snaffle) => {
-    const newDistance = getDistanceBetween(wizard, snaffle);
-    return newDistance > snaffle.distance ?
-      Object.assign({}, snaffle, {newDistance}):
-      snaffle;
+function getClosestSnaffle(object, snaffles) {
+  return snaffles.reduce((closestObject, snaffle) => {
+    const newDistance = getDistanceBetween(object, snaffle);
+    return newDistance < closestObject.distance ?
+      Object.assign({}, snaffle, {distance: newDistance}):
+      closestObject;
   }, {
     x: 0,
     y: 0,
-    distance: 0
+    distance: 100000000000
   });
+}
+
+function targetSnaffle(snaffle) {
+  printErr('snaffle.x : ' + snaffle.x);
+  printErr('snaffle.y : ' + snaffle.y);
+
+  print(`MOVE ${snaffle.x} ${snaffle.y} 150`);
 }
 
 var myTeamId = parseInt(readline()); // if 0 you need to score on the right of the map, if 1 you need to score on the left
@@ -40,8 +47,19 @@ var oppositeGoals = {
     y: 3750
   }
 };
+var myGoals = {
+  0: {
+    x: 0,
+    y: 3750
+  },
+  1: {
+    x: 16000,
+    y: 3750
+  }
+};
 
 var enemyGoal = oppositeGoals[myTeamId];
+var myGoal = myGoals[myTeamId];
 
 // game loop
 while (true) {
@@ -70,13 +88,21 @@ while (true) {
     const myWizards = getMyWizards(entitiesTable);
     const snaffles = getSnaffles(entitiesTable);
 
+
     myWizards.forEach(function(myWizard) {
+        printErr('state' + myWizard.state);
         if (myWizard.state === 1) {
-          print(`THROW ${enemyGoal.x} ${enemyGoal.y} 500`);
+            print(`THROW ${enemyGoal.x} ${enemyGoal.y} 500`);
         }
         else {
           var closestSnaffle = getClosestSnaffle(myWizard, snaffles);
-          print(`MOVE ${closestSnaffle.x} ${closestSnaffle.y} 150`);
+
+          // once we target a snaffle we remove it from the list
+          var closestSnaffleIndex = snaffles.findIndex(snaffle => snaffle.x === closestSnaffle.x && snaffle.y === closestSnaffle.y);
+          snaffles.splice(closestSnaffleIndex, 1);
+          printErr('closestSnaffle.x : ' + closestSnaffle.x);
+          printErr('closestSnaffle.y : ' + closestSnaffle.y);
+          targetSnaffle(closestSnaffle);
         }
         // Write an action using print()
         // To debug: printErr('Debug messages...');
