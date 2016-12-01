@@ -105,7 +105,15 @@ while (true) {
           }
           printErr('closestSnaffle.x : ' + closestSnaffle.x);
           printErr('closestSnaffle.y : ' + closestSnaffle.y);
-          targetSnaffle(closestSnaffle);
+
+          // TODO : extract method & check direction before flipendo
+          if( mana >= 20 && getDistanceBetween(closestSnaffle, myWizard) < 2500) {
+            mana = mana -20;
+            print(`FLIPENDO ${closestSnaffle.entityId}`);
+          }
+          else {
+            targetSnaffle(closestSnaffle);
+          }
         }
         mana = mana + 1;
         // Write an action using print()
