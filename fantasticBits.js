@@ -2,6 +2,7 @@
  * Grab Snaffles and try to throw them through the opponent's goal!
  * Move towards a Snaffle and use your team id to determine where you need to throw it.
  **/
+const optimalDistanceForFlipendo = 3500;
 
 function isSnaffleBetweenEnnemyGoal(myWizard, snaffle) {
     return ((myWizard.x > snaffle.x && snaffle.x > enemyGoal.x)
@@ -108,7 +109,7 @@ while (true) {
           }
 
           // TODO : extract method & check direction before flipendo
-          if( mana >= 20 && getDistanceBetween(closestSnaffle, myWizard) < 2500 && isSnaffleBetweenEnnemyGoal(myWizard, closestSnaffle)) {
+          if( mana >= 20 && getDistanceBetween(closestSnaffle, myWizard) < optimalDistanceForFlipendo && isSnaffleBetweenEnnemyGoal(myWizard, closestSnaffle)) {
             mana = mana - 20;
             print(`FLIPENDO ${closestSnaffle.entityId}`);
           }
