@@ -3,6 +3,11 @@
  * Move towards a Snaffle and use your team id to determine where you need to throw it.
  **/
 
+function isSnaffleBetweenEnnemyGoal(myWizard, snaffle) {
+    return (myWizard.x > snaffle.x && snaffle.x > enemyGoal.x)
+      || (myWizard.x < snaffle.x && snaffle.x < enemyGoal.x);
+}
+
 function getMyWizards(entities) {
   return entities.filter(entity => entity.entityType === 'WIZARD');
 }
@@ -29,9 +34,6 @@ function getClosestSnaffle(object, snaffles) {
 }
 
 function targetSnaffle(snaffle) {
-  printErr('snaffle.x : ' + snaffle.x);
-  printErr('snaffle.y : ' + snaffle.y);
-
   print(`MOVE ${snaffle.x} ${snaffle.y} 150`);
 }
 
@@ -91,24 +93,21 @@ while (true) {
 
 
     myWizards.forEach(function(myWizard) {
-        printErr('state' + myWizard.state);
+        printErr(`mana : ${mana}`);
         if (myWizard.state === 1) {
             print(`THROW ${enemyGoal.x} ${enemyGoal.y} 500`);
         }
         else {
           var closestSnaffle = getClosestSnaffle(myWizard, snaffles);
-
           // once we target a snaffle we remove it from the list
           var closestSnaffleIndex = snaffles.findIndex(snaffle => snaffle.x === closestSnaffle.x && snaffle.y === closestSnaffle.y);
           if (snaffles.length > 1) {
             snaffles.splice(closestSnaffleIndex, 1);
           }
-          printErr('closestSnaffle.x : ' + closestSnaffle.x);
-          printErr('closestSnaffle.y : ' + closestSnaffle.y);
 
           // TODO : extract method & check direction before flipendo
-          if( mana >= 20 && getDistanceBetween(closestSnaffle, myWizard) < 2500) {
-            mana = mana -20;
+          if( mana >= 20 && getDistanceBetween(closestSnaffle, myWizard) < 2500 && isSnaffleBetweenEnnemyGoal(myWizard, closestSnaffle)) {
+            mana = mana - 20;
             print(`FLIPENDO ${closestSnaffle.entityId}`);
           }
           else {
