@@ -4,8 +4,10 @@
  **/
 
 function isSnaffleBetweenEnnemyGoal(myWizard, snaffle) {
-    return (myWizard.x > snaffle.x && snaffle.x > enemyGoal.x)
-      || (myWizard.x < snaffle.x && snaffle.x < enemyGoal.x);
+    return ((myWizard.x > snaffle.x && snaffle.x > enemyGoal.x)
+      || (myWizard.x < snaffle.x && snaffle.x < enemyGoal.x)) &&
+      ((myWizard.y > snaffle.y && snaffle.y > enemyGoal.y)
+        || (myWizard.y < snaffle.y && snaffle.y < enemyGoal.y));
 }
 
 function getMyWizards(entities) {
