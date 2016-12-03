@@ -4,6 +4,17 @@
  **/
 const optimalDistanceForFlipendo = 3500;
 
+function findSnaffleToFlipendo(myWizard, snaffles) {
+  const snaffleToFlipendo = snaffles.find(snaffle => {
+    return getDistanceBetween(snaffle, myWizard) < optimalDistanceForFlipendo &&
+    isSnaffleBetweenEnnemyGoal(myWizard, snaffle)
+  });
+  printErr('entityId', snaffleToFlipendo && snaffleToFlipendo.entityId);
+  printErr('myWizard', myWizard.entityId);
+
+  return snaffleToFlipendo && snaffleToFlipendo.entityId;
+}
+
 function isSnaffleBetweenEnnemyGoal(myWizard, snaffle) {
     return ((myWizard.x > snaffle.x && snaffle.x > enemyGoal.x)
       || (myWizard.x < snaffle.x && snaffle.x < enemyGoal.x)) &&
@@ -109,9 +120,15 @@ while (true) {
           }
 
           // TODO : extract method & check direction before flipendo
-          if( mana >= 20 && getDistanceBetween(closestSnaffle, myWizard) < optimalDistanceForFlipendo && isSnaffleBetweenEnnemyGoal(myWizard, closestSnaffle)) {
-            mana = mana - 20;
-            print(`FLIPENDO ${closestSnaffle.entityId}`);
+          if( mana >= 20) {
+            const snaffleToFlipendoEntityId = findSnaffleToFlipendo(myWizard, snaffles);
+            if (snaffleToFlipendoEntityId) {
+              mana = mana - 20;
+              print(`FLIPENDO ${snaffleToFlipendoEntityId}`);
+            }
+            else {
+              targetSnaffle(closestSnaffle);
+            }
           }
           else {
             targetSnaffle(closestSnaffle);
